@@ -1,0 +1,145 @@
+#:import dp kivy.metrics.dp
+
+# تعريف بطاقة المهمة المخصصة (TaskCard)
+<TaskCard>:
+    orientation: 'vertical'
+    padding: dp(15)
+    spacing: dp(5)
+    size_hint_y: None
+    height: dp(70)
+    
+    # Arrière-plan arrondi et coloré
+    canvas.before:
+        Color:
+            rgba: 1, 0.9, 0.95, 1 # Arrière-بنك فاتح
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [dp(15), dp(15), dp(15), dp(15)]
+        
+        Color:
+            rgba: 1, 0.4, 0.7, 1
+        RoundedRectangle:
+            pos: self.right - dp(10), self.y
+            size: dp(10), self.height
+            radius: [0, dp(15), dp(15), 0]
+            
+    BoxLayout:
+        orientation: 'horizontal'
+        
+        MDLabel:
+            text: root.task_title
+            font_style: 'H6'
+            theme_text_color: 'Custom'
+            text_color: 0.1, 0.1, 0.1, 1 
+            size_hint_x: 0.7
+            
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_x: 0.3
+            spacing: dp(10)
+            
+            MDLabel:
+                text: root.task_time
+                font_style: 'Caption'
+                halign: 'right'
+                theme_text_color: 'Custom'
+                text_color: 0.4, 0.4, 0.4, 1 
+                
+            MDLabel:
+                text: root.task_duration + ' min'
+                font_style: 'Caption'
+                halign: 'right'
+                theme_text_color: 'Custom'
+                text_color: 0.4, 0.4, 0.4, 1 
+
+
+ScreenManager:
+    FirstScreen:
+    SecondScreen:
+
+<FirstScreen>:
+    name: "first"
+
+    FloatLayout:
+        canvas.before:
+            Color:
+                rgba: 0.98, 0.90, 0.95, 1  
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+        BoxLayout:
+            orientation: "vertical"
+            spacing: dp(35) 
+            padding: dp(30)
+            size_hint: 0.9, 0.8 
+            pos_hint: {"center_x": 0.5, "center_y": 0.5}
+
+            MDLabel:
+                text: "What’s your plan for today?"
+                font_style: "H4"
+                halign: "center"
+                color: 0.2, 0.2, 0.2, 1
+                size_hint_y: None
+                height: self.texture_size[1] 
+
+            Image:
+                source: "book.jpg" 
+                size_hint_y: 0.7 
+                allow_stretch: True
+                keep_ratio: True
+                pos_hint: {"center_x": 0.5}
+
+            Button:
+                text: "Next"
+                size_hint: None, None
+                size: dp(160), dp(55) 
+                pos_hint: {"center_x": 0.5}
+                background_normal: ""
+                background_color: 1, 0.4, 0.7, 1 
+                font_size: "18sp"
+                on_release:
+                    app.root.current = "second"
+                    
+                    
+<SecondScreen>:
+    name: "second"
+
+    FloatLayout:
+        canvas.before:
+            Color:
+                rgba: 0.98, 0.90, 0.95, 1  
+            Rectangle:
+                pos: self.pos
+                size: self.size
+                
+        ScrollView:
+            do_scroll_x: False
+            do_scroll_y: True
+            size_hint: 1, 1
+
+            BoxLayout:
+                id: task_list
+                orientation: "vertical"
+                size_hint_y: None
+                height: self.minimum_height
+                padding: dp(10)
+                spacing: dp(10)
+
+        Button:
+            text: "+"
+            background_normal: ""
+            background_color: 1, 0.4, 0.7, 1 
+            color: 1, 1, 1, 1
+            font_size: "30sp"
+            size_hint: None, None
+            size: dp(60), dp(60)
+            pos_hint: {"right": 0.95, "bottom": 0.05}
+            canvas.before:
+                Color:
+                    rgba: self.background_color
+                Ellipse:
+                    pos: self.pos
+                    size: self.size
+            on_release: app.open_add_task_popup()
